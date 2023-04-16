@@ -1,10 +1,14 @@
 use bevy::prelude::*;
-pub mod animation;
 use std::collections::HashMap;
+
+pub mod animation;
+pub mod player;
+
 fn main() {
     App::new()
     .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
     .add_system(animation::animate_sprite)
+    .add_system(player::move_player)
     .add_startup_system(setup)
     .run();
 }
@@ -41,5 +45,6 @@ pub fn setup(mut commands: Commands, asset_server : Res<AssetServer>, mut textur
         last_animation : "Walk".to_string(),
         current_animation : "Walk".to_string(),
         animation_bank: create_player_anim_hashmap(),
-    });
+    })
+    .insert(player::PlayerMovement{speed:100.});
 }
