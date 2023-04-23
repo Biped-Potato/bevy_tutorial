@@ -3,12 +3,19 @@ use std::collections::HashMap;
 
 pub mod animation;
 pub mod player;
-
+pub mod player_attach;
+pub mod gun;
+pub mod cursor_info;
+pub mod bullet;
 fn main() {
     App::new()
+    .insert_resource(cursor_info::OffsetedCursorPosition{x:0.,y:0.})
     .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
     .add_system(animation::animate_sprite)
     .add_system(player::move_player)
+    .add_system(gun::gun_controls)
+    .add_system(player_attach::attach_objects)
+    .add_system(bullet::update_bullets)
     .add_startup_system(setup)
     .run();
 }
@@ -26,7 +33,7 @@ pub fn create_gun_anim_hashmap()->HashMap<String,animation::Animation>
 {
     let mut hash_map = HashMap::new();
 
-    hash_map.insert("Shoot".to_string(),animation::Animation{start:1,end:5,looping:true,cooldown:0.1});
+    hash_map.insert("Shoot".to_string(),animation::Animation{start:1,end:5,looping:false,cooldown:0.1});
 
     hash_map.insert("Idle".to_string(),animation::Animation{start:1,end:1,looping:true,cooldown:0.1});
 
@@ -80,7 +87,7 @@ pub fn setup(mut commands: Commands, asset_server : Res<AssetServer>, mut textur
         last_animation : "Shoot".to_string(),
         current_animation : "Shoot".to_string(),
         animation_bank: create_gun_anim_hashmap(),
-    });
+    }).insert(player_attach::PlayerAttach{offset:Vec2::new(15.,-5.)}).insert(gun::GunController{shoot_cooldown:0.3,shoot_timer:0.});
 
 
 

@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
-use crate::animation::Animator;
+use crate::{animation::Animator, cursor_info::OffsetedCursorPosition, gun::GunController, player_attach::{PlayerAttach, self}};
+
 
 #[derive(Component)]
 pub struct PlayerMovement
@@ -11,11 +12,10 @@ pub struct PlayerMovement
 pub fn move_player(
     time : Res<Time>,
     keys: Res<Input<KeyCode>>,
-    mut query: Query<(
-    &PlayerMovement,
-    &mut Transform,
-    &mut Animator,
-)>)
+    mut query: Query<(&PlayerMovement,&mut Transform,&mut Animator)>,
+    mut gun_query: Query<&mut TextureAtlasSprite,(With<GunController>,Without<PlayerMovement>)>,
+    cursor_res : ResMut<OffsetedCursorPosition>,
+)
 {
     for(player_movement, mut transform,mut animator) in query.iter_mut()
     {
@@ -42,6 +42,15 @@ pub fn move_player(
             animator.current_animation = "Walk".to_string();
             transform.translation.x+=player_movement.speed*time.delta_seconds();
         }
-
+        for mut sprite in gun_query.iter_mut()
+        {
+            if cursor_res.x-transform.translation.x>=0.
+            {
+                sprite.flip_y = false;
+            }
+            else {
+                sprite.flip_y = true;
+            }
+        }
     }
 }
