@@ -65,6 +65,5 @@ pub fn gun_controls(mut cursor_res:ResMut<OffsetedCursorPosition>,
                 }).insert(Bullet{lifetime:BULLET_LIFETIME,speed:BULLET_SPEED,direction:diff.normalize()});
             }
         }
-
     }
 }

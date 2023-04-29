@@ -7,6 +7,8 @@ pub mod player_attach;
 pub mod gun;
 pub mod cursor_info;
 pub mod bullet;
+pub mod enemy;
+pub mod enemy_spawner;
 fn main() {
     App::new()
     .insert_resource(cursor_info::OffsetedCursorPosition{x:0.,y:0.})
@@ -16,6 +18,9 @@ fn main() {
     .add_system(gun::gun_controls)
     .add_system(player_attach::attach_objects)
     .add_system(bullet::update_bullets)
+    .add_system(bullet::update_bullet_hits)
+    .add_system(enemy::update_enemies)
+    .add_system(enemy_spawner::update_spawning)
     .add_startup_system(setup)
     .run();
 }
@@ -89,6 +94,6 @@ pub fn setup(mut commands: Commands, asset_server : Res<AssetServer>, mut textur
         animation_bank: create_gun_anim_hashmap(),
     }).insert(player_attach::PlayerAttach{offset:Vec2::new(15.,-5.)}).insert(gun::GunController{shoot_cooldown:0.3,shoot_timer:0.});
 
-
+    commands.spawn(TransformBundle{..default()}).insert(enemy_spawner::EnemySpawner{cooldown:1.,timer:1.});
 
 }
