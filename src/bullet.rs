@@ -41,16 +41,16 @@ pub fn update_bullet_hits(
     let mut bullet_len = bullet_list.len();
     for(mut enemy,transform) in enemy_query.iter_mut()
     {
-        let mut i  = 0;
-        while i < bullet_len
+        let mut i : i32 = 0;
+        while i < bullet_len as i32
         {
-            if Vec2::distance(bullet_list[i].translation,Vec2::new(transform.translation.x,transform.translation.y)) <= 36.
+            if Vec2::distance(bullet_list[i as usize].translation,Vec2::new(transform.translation.x,transform.translation.y)) <= 36.
             {
                 enemy.health-=1.;
 
-                commands.entity(bullet_list[i].entity).despawn();
+                commands.entity(bullet_list[i as usize].entity).despawn();
 
-                bullet_list.remove(i);
+                bullet_list.remove(i as usize);
 
                 i-=1;
 
