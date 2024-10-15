@@ -17,7 +17,7 @@ pub fn gun_controls(
     mut cursor: EventReader<CursorMoved>,
     primary_query: Query<&Window, With<PrimaryWindow>>,
     time: Res<Time>,
-    buttons: Res<Input<MouseButton>>,
+    buttons: Res<ButtonInput<MouseButton>>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
 ) {
@@ -31,7 +31,7 @@ pub fn gun_controls(
         let Ok(primary) = primary_query.get_single() else {
             return;
         };
-        let mut cursor_position = match cursor.iter().last() {
+        let mut cursor_position = match cursor.read().last() {
             Some(cursor_moved) => cursor_moved.position,
             None => Vec2::new(
                 cursor_res.x + primary.width() / 2.,
@@ -55,17 +55,18 @@ pub fn gun_controls(
                 spawn_transform.translation = transform.translation;
                 spawn_transform.rotation = Quat::from_axis_angle(Vec3::new(0., 0., 1.), angle);
                 gun_controller.shoot_timer = gun_controller.shoot_cooldown;
-                commands
-                    .spawn(SpriteBundle {
+                commands.spawn((
+                    SpriteBundle {
                         transform: spawn_transform,
                         texture: asset_server.load("bullet.png"),
                         ..default()
-                    })
-                    .insert(Bullet {
+                    },
+                    Bullet {
                         lifetime: BULLET_LIFETIME,
                         speed: BULLET_SPEED,
                         direction: diff.normalize(),
-                    });
+                    },
+                ));
             }
         }
     }

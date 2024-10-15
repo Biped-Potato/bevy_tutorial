@@ -31,24 +31,24 @@ impl Default for Animator {
     }
 }
 
-pub fn animate_sprite(time: Res<Time>, mut query: Query<(&mut Animator, &mut TextureAtlasSprite)>) {
-    for (mut animator, mut sprite) in query.iter_mut() {
+pub fn animate_sprite(time: Res<Time>, mut query: Query<(&mut Animator, &mut TextureAtlas)>) {
+    for (mut animator, mut texture_atlas) in query.iter_mut() {
         let anim = animator.animation_bank[animator.current_animation.as_str()];
         if animator.last_animation != animator.current_animation {
-            sprite.index = anim.start - 1;
+            texture_atlas.index = anim.start - 1;
         }
         animator.timer = animator.timer - time.delta().as_secs_f32();
         if animator.timer <= 0. {
             animator.timer = anim.cooldown;
             if anim.looping == true {
-                sprite.index = ((sprite.index + 1 - (anim.start - 1))
+                texture_atlas.index = ((texture_atlas.index + 1 - (anim.start - 1))
                     % (anim.end - anim.start + 1))
                     + anim.start
                     - 1;
             } else if anim.looping == false {
-                sprite.index += 1;
-                if sprite.index > anim.end - 1 {
-                    sprite.index = anim.end - 1;
+                texture_atlas.index += 1;
+                if texture_atlas.index > anim.end - 1 {
+                    texture_atlas.index = anim.end - 1;
                 }
             }
         }

@@ -43,7 +43,7 @@ pub fn create_enemy_anim_hashmap() -> HashMap<String, animation::Animation> {
 pub fn update_spawning(
     primary_query: Query<&Window, With<PrimaryWindow>>,
     mut spawner_query: Query<&mut EnemySpawner>,
-    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+    mut texture_atlases: ResMut<Assets<TextureAtlasLayout>>,
     time: Res<Time>,
     asset_server: Res<AssetServer>,
     mut commands: Commands,
@@ -57,12 +57,11 @@ pub fn update_spawning(
 
             spawner.timer = spawner.cooldown;
             let texture_handle = asset_server.load("player.png");
-            let texture_atlas = TextureAtlas::from_grid(
-                texture_handle,
-                Vec2::new(9., 10.),
+            let texture_atlas = TextureAtlasLayout::from_grid(
+                UVec2::new(9, 10),
                 3,
                 1,
-                Some(Vec2::new(1., 1.)),
+                Some(UVec2::new(1, 1)),
                 None,
             );
             let texture_atlas_handle = texture_atlases.add(texture_atlas);
@@ -101,23 +100,28 @@ pub fn update_spawning(
                 }
             }
 
-            commands
-                .spawn(SpriteSheetBundle {
-                    texture_atlas: texture_atlas_handle,
+            commands.spawn((
+                SpriteBundle {
+                    texture: texture_handle,
                     transform: spawn_transform,
                     ..default()
-                })
-                .insert(Animator {
+                },
+                TextureAtlas {
+                    layout: texture_atlas_handle,
+                    index: 0,
+                },
+                Animator {
                     animation_bank: create_enemy_anim_hashmap(),
                     timer: 0.,
                     cooldown: 0.05,
                     last_animation: "Walk".to_string(),
                     current_animation: "Walk".to_string(),
-                })
-                .insert(Enemy {
+                },
+                Enemy {
                     speed: 100.,
                     health: 1.,
-                });
+                },
+            ));
         }
     }
 }

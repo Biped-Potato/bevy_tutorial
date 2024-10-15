@@ -9,28 +9,28 @@ pub struct PlayerMovement {
 
 pub fn move_player(
     time: Res<Time>,
-    keys: Res<Input<KeyCode>>,
-    mut query: Query<(&PlayerMovement, &mut Transform, &mut Animator)>,
-    mut gun_query: Query<&mut TextureAtlasSprite, (With<GunController>, Without<PlayerMovement>)>,
+    keys: Res<ButtonInput<KeyCode>>,
+    mut query: Query<(&PlayerMovement, &mut Transform, &mut Sprite, &mut Animator)>,
+    mut gun_query: Query<&mut Sprite, (With<GunController>, Without<PlayerMovement>)>,
     cursor_res: ResMut<OffsetedCursorPosition>,
 ) {
-    for (player_movement, mut transform, mut animator) in query.iter_mut() {
+    for (player_movement, mut transform, mut sprite, mut animator) in query.iter_mut() {
         animator.current_animation = "Idle".to_string();
-        if keys.pressed(KeyCode::W) {
+        if keys.pressed(KeyCode::KeyW) {
             animator.current_animation = "Walk".to_string();
             transform.translation.y += player_movement.speed * time.delta_seconds();
         }
-        if keys.pressed(KeyCode::A) {
-            transform.rotation = Quat::from_rotation_y(std::f32::consts::PI);
+        if keys.pressed(KeyCode::KeyA) {
+            sprite.flip_x = true;
             animator.current_animation = "Walk".to_string();
             transform.translation.x -= player_movement.speed * time.delta_seconds();
         }
-        if keys.pressed(KeyCode::S) {
+        if keys.pressed(KeyCode::KeyS) {
             animator.current_animation = "Walk".to_string();
             transform.translation.y -= player_movement.speed * time.delta_seconds();
         }
-        if keys.pressed(KeyCode::D) {
-            transform.rotation = Quat::default();
+        if keys.pressed(KeyCode::KeyD) {
+            sprite.flip_x = false;
             animator.current_animation = "Walk".to_string();
             transform.translation.x += player_movement.speed * time.delta_seconds();
         }
