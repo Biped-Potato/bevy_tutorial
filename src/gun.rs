@@ -1,3 +1,5 @@
+use std::f32::consts::PI;
+
 use bevy::{prelude::*, window::PrimaryWindow};
 
 use crate::{animation::Animator, bullet::Bullet, cursor_info::OffsetedCursorPosition};
@@ -32,23 +34,20 @@ pub fn gun_controls(
             return;
         };
         let mut cursor_position = match cursor.read().last() {
-            Some(cursor_moved) => cursor_moved.position,
+            Some(cursor_moved) => {
+                Vec2::new(cursor_moved.position.x,-cursor_moved.position.y)+Vec2::new(-primary.width()/2.,primary.height()/2.)
+            },
             None => Vec2::new(
-                cursor_res.x + primary.width() / 2.,
-                cursor_res.y + primary.height() / 2.,
+                cursor_res.x,
+                cursor_res.y,
             ),
         };
-
-        cursor_position.x -= primary.width() / 2.;
-        cursor_position.y -= primary.height() / 2.;
-
         cursor_res.x = cursor_position.x;
         cursor_res.y = cursor_position.y;
 
         let diff = cursor_position - Vec2::new(transform.translation.x, transform.translation.y);
         let angle = diff.y.atan2(diff.x);
         transform.rotation = Quat::from_axis_angle(Vec3::new(0., 0., 1.), angle);
-
         if gun_controller.shoot_timer <= 0. {
             if buttons.pressed(MouseButton::Left) {
                 let mut spawn_transform = Transform::from_scale(Vec3::splat(5.0));
