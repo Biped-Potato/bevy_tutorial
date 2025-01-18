@@ -29,6 +29,7 @@ pub struct BulletInfo {
     pub entity: Entity,
 }
 
+#[allow(clippy::type_complexity)]
 pub fn update_bullet_hits(
     bullet_query: Query<(&Transform, Entity), (With<Bullet>, Without<Enemy>)>,
     mut enemy_query: Query<(&mut Enemy, &mut Transform), Without<Bullet>>,
@@ -38,7 +39,7 @@ pub fn update_bullet_hits(
     for (transform, entity) in bullet_query.iter() {
         bullet_list.push(BulletInfo {
             translation: Vec2::new(transform.translation.x, transform.translation.y),
-            entity: entity,
+            entity,
         });
     }
     let mut bullet_len = bullet_list.len();

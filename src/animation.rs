@@ -37,15 +37,15 @@ pub fn animate_sprite(time: Res<Time>, mut query: Query<(&mut Animator, &mut Tex
         if animator.last_animation != animator.current_animation {
             texture_atlas.index = anim.start - 1;
         }
-        animator.timer = animator.timer - time.delta().as_secs_f32();
+        animator.timer -= time.delta().as_secs_f32();
         if animator.timer <= 0. {
             animator.timer = anim.cooldown;
-            if anim.looping == true {
+            if anim.looping {
                 texture_atlas.index = ((texture_atlas.index + 1 - (anim.start - 1))
                     % (anim.end - anim.start + 1))
                     + anim.start
                     - 1;
-            } else if anim.looping == false {
+            } else if !anim.looping {
                 texture_atlas.index += 1;
                 if texture_atlas.index > anim.end - 1 {
                     texture_atlas.index = anim.end - 1;
@@ -68,5 +68,5 @@ pub fn create_anim_hashmap() -> HashMap<String, Animation> {
         },
     );
 
-    return hash_map;
+    hash_map
 }

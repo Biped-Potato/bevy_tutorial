@@ -35,11 +35,7 @@ pub fn move_player(
             transform.translation.x += player_movement.speed * time.delta_seconds();
         }
         for mut sprite in gun_query.iter_mut() {
-            if cursor_res.x - transform.translation.x >= 0. {
-                sprite.flip_y = false;
-            } else {
-                sprite.flip_y = true;
-            }
+            sprite.flip_y = cursor_res.x - transform.translation.x < 0.;
         }
     }
 }

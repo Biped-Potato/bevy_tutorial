@@ -37,7 +37,7 @@ pub fn create_enemy_anim_hashmap() -> HashMap<String, animation::Animation> {
         },
     );
 
-    return hash_map;
+    hash_map
 }
 
 pub fn update_spawning(
@@ -84,20 +84,18 @@ pub fn update_spawning(
                         0.,
                     );
                 }
+            } else if rng.gen_range(0..2) == 1 {
+                spawn_transform.translation = Vec3::new(
+                    rng.gen_range(-primary.width() / 2.0..primary.width() / 2.0),
+                    primary.height() / 2.,
+                    0.,
+                );
             } else {
-                if rng.gen_range(0..2) == 1 {
-                    spawn_transform.translation = Vec3::new(
-                        rng.gen_range(-primary.width() / 2.0..primary.width() / 2.0),
-                        primary.height() / 2.,
-                        0.,
-                    );
-                } else {
-                    spawn_transform.translation = Vec3::new(
-                        rng.gen_range(-primary.width() / 2.0..primary.width() / 2.0),
-                        -primary.height() / 2.,
-                        0.,
-                    );
-                }
+                spawn_transform.translation = Vec3::new(
+                    rng.gen_range(-primary.width() / 2.0..primary.width() / 2.0),
+                    -primary.height() / 2.,
+                    0.,
+                );
             }
 
             commands.spawn((
