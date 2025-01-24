@@ -18,7 +18,7 @@ pub fn update_enemies(
         for (enemy, mut transform, entity) in enemy_query.iter_mut() {
             let moving = Vec3::normalize(player_transform.translation - transform.translation)
                 * enemy.speed
-                * time.delta_seconds();
+                * time.delta_secs();
             transform.translation += moving;
 
             if enemy.health <= 0. {

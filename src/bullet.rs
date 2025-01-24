@@ -15,8 +15,8 @@ pub fn update_bullets(
     mut commands: Commands,
 ) {
     for (mut bullet, mut transform, entity) in bullet_query.iter_mut() {
-        bullet.lifetime -= time.delta_seconds();
-        let moving = bullet.speed * bullet.direction * time.delta_seconds();
+        bullet.lifetime -= time.delta_secs();
+        let moving = bullet.speed * bullet.direction * time.delta_secs();
         transform.translation += Vec3::new(moving.x, moving.y, 0.);
         if bullet.lifetime <= 0. {
             commands.entity(entity).despawn();

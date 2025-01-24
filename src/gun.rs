@@ -23,7 +23,7 @@ pub fn gun_controls(
     mut commands: Commands,
 ) {
     for (mut gun_controller, mut transform, mut animator) in gun_query.iter_mut() {
-        gun_controller.shoot_timer -= time.delta_seconds();
+        gun_controller.shoot_timer -= time.delta_secs();
         if gun_controller.shoot_timer > 0. {
             animator.current_animation = "Shoot".to_string();
         } else {
@@ -51,11 +51,8 @@ pub fn gun_controls(
             spawn_transform.rotation = Quat::from_axis_angle(Vec3::new(0., 0., 1.), angle);
             gun_controller.shoot_timer = gun_controller.shoot_cooldown;
             commands.spawn((
-                SpriteBundle {
-                    transform: spawn_transform,
-                    texture: asset_server.load("bullet.png"),
-                    ..default()
-                },
+                Sprite::from_image(asset_server.load("bullet.png")),
+                spawn_transform,
                 Bullet {
                     lifetime: BULLET_LIFETIME,
                     speed: BULLET_SPEED,

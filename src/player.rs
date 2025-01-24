@@ -16,23 +16,23 @@ pub fn move_player(
 ) {
     for (player_movement, mut transform, mut sprite, mut animator) in query.iter_mut() {
         animator.current_animation = "Idle".to_string();
-        if keys.pressed(KeyCode::KeyW) {
+        if keys.pressed(KeyCode::KeyW) || keys.pressed(KeyCode::ArrowUp) {
             animator.current_animation = "Walk".to_string();
-            transform.translation.y += player_movement.speed * time.delta_seconds();
+            transform.translation.y += player_movement.speed * time.delta_secs();
         }
-        if keys.pressed(KeyCode::KeyA) {
+        if keys.pressed(KeyCode::KeyA) || keys.pressed(KeyCode::ArrowLeft) {
             sprite.flip_x = true;
             animator.current_animation = "Walk".to_string();
-            transform.translation.x -= player_movement.speed * time.delta_seconds();
+            transform.translation.x -= player_movement.speed * time.delta_secs();
         }
-        if keys.pressed(KeyCode::KeyS) {
+        if keys.pressed(KeyCode::KeyS) || keys.pressed(KeyCode::ArrowDown) {
             animator.current_animation = "Walk".to_string();
-            transform.translation.y -= player_movement.speed * time.delta_seconds();
+            transform.translation.y -= player_movement.speed * time.delta_secs();
         }
-        if keys.pressed(KeyCode::KeyD) {
+        if keys.pressed(KeyCode::KeyD) || keys.pressed(KeyCode::ArrowRight) {
             sprite.flip_x = false;
             animator.current_animation = "Walk".to_string();
-            transform.translation.x += player_movement.speed * time.delta_seconds();
+            transform.translation.x += player_movement.speed * time.delta_secs();
         }
         for mut sprite in gun_query.iter_mut() {
             sprite.flip_y = cursor_res.x - transform.translation.x < 0.;

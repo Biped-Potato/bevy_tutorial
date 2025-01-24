@@ -93,17 +93,10 @@ pub fn setup(
     let mut texture_atlas =
         TextureAtlasLayout::from_grid(UVec2::new(8 + 1, 9 + 1), 3, 1, Some(UVec2::new(1, 1)), None);
     let mut texture_atlas_handle = texture_atlases.add(texture_atlas);
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn(Camera2d);
     commands.spawn((
-        SpriteBundle {
-            texture: texture_handle,
-            transform: Transform::from_scale(Vec3::splat(5.0)),
-            ..default()
-        },
-        TextureAtlas {
-            layout: texture_atlas_handle,
-            index: 0,
-        },
+        Sprite::from_atlas_image(texture_handle, TextureAtlas::from(texture_atlas_handle)),
+        Transform::from_scale(Vec3::splat(5.0)),
         animation::Animator {
             timer: 0.,
             cooldown: 0.05,
@@ -120,15 +113,8 @@ pub fn setup(
     texture_atlas_handle = texture_atlases.add(texture_atlas);
 
     commands.spawn((
-        SpriteBundle {
-            texture: texture_handle,
-            transform: Transform::from_scale(Vec3::splat(5.0)),
-            ..default()
-        },
-        TextureAtlas {
-            layout: texture_atlas_handle,
-            index: 0,
-        },
+        Sprite::from_atlas_image(texture_handle, texture_atlas_handle.into()),
+        Transform::from_scale(Vec3::splat(5.0)),
         animation::Animator {
             timer: 0.,
             cooldown: 0.05,
@@ -146,7 +132,7 @@ pub fn setup(
     ));
 
     commands.spawn((
-        TransformBundle { ..default() },
+        Transform::default(),
         enemy_spawner::EnemySpawner {
             cooldown: 1.,
             timer: 1.,

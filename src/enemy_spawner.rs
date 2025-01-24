@@ -49,7 +49,7 @@ pub fn update_spawning(
     mut commands: Commands,
 ) {
     for mut spawner in spawner_query.iter_mut() {
-        spawner.timer -= time.delta_seconds();
+        spawner.timer -= time.delta_secs();
         if spawner.timer <= 0. {
             let Ok(primary) = primary_query.get_single() else {
                 return;
@@ -99,15 +99,8 @@ pub fn update_spawning(
             }
 
             commands.spawn((
-                SpriteBundle {
-                    texture: texture_handle,
-                    transform: spawn_transform,
-                    ..default()
-                },
-                TextureAtlas {
-                    layout: texture_atlas_handle,
-                    index: 0,
-                },
+                Sprite::from_atlas_image(texture_handle, TextureAtlas::from(texture_atlas_handle)),
+                spawn_transform,
                 Animator {
                     animation_bank: create_enemy_anim_hashmap(),
                     timer: 0.,

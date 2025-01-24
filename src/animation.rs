@@ -31,9 +31,12 @@ impl Default for Animator {
     }
 }
 
-pub fn animate_sprite(time: Res<Time>, mut query: Query<(&mut Animator, &mut TextureAtlas)>) {
-    for (mut animator, mut texture_atlas) in query.iter_mut() {
+pub fn animate_sprite(time: Res<Time>, mut query: Query<(&mut Animator, &mut Sprite)>) {
+    for (mut animator, mut sprite) in query.iter_mut() {
         let anim = animator.animation_bank[animator.current_animation.as_str()];
+        let Some(texture_atlas) = sprite.texture_atlas.as_mut() else {
+            continue;
+        };
         if animator.last_animation != animator.current_animation {
             texture_atlas.index = anim.start - 1;
         }
