@@ -1138,6 +1138,7 @@ name = "bevy_tutorial_actual"
 version = "0.1.0"
 dependencies = [
  "bevy",
+ "bevy_dylib",
  "rand",
 ]
 
